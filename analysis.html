@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light only">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анализ документации — АССИСТЕНТ творческое пространство</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&subset=cyrillic&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/docs.css">
+<link rel="stylesheet" href="assets/css/analysis.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="mark">А</span><span><b>АССИСТЕНТ</b><small>творческое пространство</small></span></a>
+  <div class="crumbs"><a href="index.html">← Главная</a><a href="stamp.html">Stamp Studio</a><a href="docs.html">Автозаполнение</a><span class="here">Анализ документации</span></div>
+  <span class="training">Тренировочный режим</span>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Анализ документации</h1>
+    <p>Загрузите закупочную или тендерную документацию — один файл или несколько (Word .doc / .docx, Excel .xls / .xlsx, PDF). Программа найдёт «Состав заявки», «Требования к участнику» и формы, а формы вырежет в отдельные файлы Word без изменения оформления и со сносками.</p>
+  </div>
+
+  <section class="card an-load">
+    <label class="drop" id="anDrop" data-tip="Перетащите сюда файлы документации или нажмите на поле — откроется выбор. Можно выбрать сразу несколько файлов.">
+      <input type="file" id="anFile" multiple accept=".doc,.docx,.xls,.xlsx,.pdf,.txt" hidden>
+      <b>Нажмите или перетащите сюда файлы документации</b>
+      <small>Word (.doc, .docx) · Excel (.xls, .xlsx) · PDF · можно несколько файлов сразу. Файлы не уходят из вашего браузера.</small>
+    </label>
+    <ul class="files" id="anFiles"></ul>
+    <div class="row an-opts">
+      <label class="chk" data-tip="Если галочка стоит, в вырезанный файл попадут служебные строки «Начало формы» / «Конец формы». Обычно они не нужны."><input type="checkbox" id="optDelims"> Оставлять в файле строки «Начало формы» / «Конец формы»</label>
+      <label class="chk" data-tip="Находить форму и тогда, когда в документе нет слова «Форма», а есть только крупное название («ЗАЯВКА НА УЧАСТИЕ», «АНКЕТА» и т. п.) и подпись с М.П."><input type="checkbox" id="optTitles" checked> Искать формы без слова «Форма» (по названию)</label>
+      <button class="btn small ghost" id="anClear" type="button" data-tip="Убрать все загруженные файлы и результаты. Ваши данные в других программах не затрагиваются.">Очистить</button>
+    </div>
+    <div class="status" id="anStatus"></div>
+  </section>
+
+  <div class="an-res" id="anRes" hidden>
+    <section class="card an-sec" id="secComp">
+      <h2><span class="n">1</span>Состав заявки <span class="cnt" id="cntComp"></span></h2>
+      <div class="sub">Разделы и пункты, где перечислены документы, входящие в заявку. Кнопка «Показать цитату» открывает полный текст.</div>
+      <div class="an-list" id="listComp"></div>
+    </section>
+    <section class="card an-sec" id="secReq">
+      <h2><span class="n">2</span>Требования к участнику <span class="cnt" id="cntReq"></span></h2>
+      <div class="sub">Требования к участнику, подрядчику, исполнителю, поставщику, организации и т. п.</div>
+      <div class="an-list" id="listReq"></div>
+    </section>
+    <section class="card an-sec" id="secForms">
+      <h2><span class="n">3</span>Найденные формы <span class="cnt" id="cntForms"></span></h2>
+      <div class="sub">Заявки, технические предложения, анкеты, справки и другие формы. Каждая вырезается в отдельный файл Word: структура, таблицы и сноски остаются как в исходнике.</div>
+      <div class="row an-bar" id="formBar" hidden>
+        <label class="chk"><input type="checkbox" id="selAll" checked> Выбрать все</label>
+        <button class="btn" id="dlSel" type="button" data-tip="Скачать отмеченные формы отдельными файлами Word, один за другим.">Скачать выбранные по отдельности</button>
+        <button class="btn primary" id="dlZip" type="button" data-tip="Все отмеченные формы одним архивом .zip.">Скачать архивом (.zip)</button>
+      </div>
+      <div class="an-list" id="listForms"></div>
+    </section>
+  </div>
+
+  <footer class="foot">Учебная программа для тренировки. Поиск построен на правилах (ключевые слова и маркеры), поэтому границы цитат и форм стоит проверять глазами — для этого у каждой найденной формы есть просмотр. Файлы обрабатываются только в вашем браузере.</footer>
+</main>
+
+<div class="an-modal" id="anModal" hidden>
+  <div class="an-box" role="dialog" aria-modal="true">
+    <div class="an-mh"><b id="anMT"></b><button class="x" type="button" id="anMX" aria-label="Закрыть">×</button></div>
+    <div class="an-mm" id="anMM"></div>
+    <div class="an-mb" id="anMB"></div>
+    <div class="an-body" id="anBody"></div>
+    <div class="an-mf"><button class="btn small" id="anCopy" type="button">Копировать текст</button><button class="btn small primary" id="anOk" type="button">Закрыть</button></div>
+  </div>
+</div>
+
+<script src="assets/vendor/jszip.min.js"></script>
+<script src="assets/vendor/docx-preview.min.js"></script>
+<script src="assets/vendor/pdfjs/pdf.min.js"></script>
+<script src="assets/vendor/cfb.min.js"></script>
+<script src="assets/js/doc97.js"></script>
+<script src="assets/js/xls.js"></script>
+<script src="assets/js/engine.js"></script>
+<script src="assets/js/analysis-core.js"></script>
+<script src="assets/js/zoom.js"></script>
+<script src="assets/js/analysis.js"></script>
+<script src="assets/js/tips.js"></script>
+</body>
+</html>
